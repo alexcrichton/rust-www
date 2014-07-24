@@ -9,6 +9,7 @@
 # option. This file may not be copied, modified, or distributed
 # except according to those terms.
 
+{
 
 msg() {
     echo "rustup: $1"
@@ -484,3 +485,5 @@ fi
 
 rm -Rf "${TMP_DIR}"
 need_ok "couldn't rm temporary installation directory"
+
+}
