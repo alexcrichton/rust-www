@@ -231,6 +231,7 @@ validate_opt () {
 }
 
 probe_need CFG_CURL  curl
+probe_need CFG_SUDO  sudo
 
 CFG_SRC_DIR="$(cd $(dirname $0) && pwd)/"
 CFG_SELF="$0"
@@ -460,7 +461,13 @@ then
 	MAYBE_UNINSTALL="--uninstall"
 fi
 
-sh "${LOCAL_INSTALL_SCRIPT}" "${MAYBE_UNINSTALL}"
+msg "This script requires superuser access to install apt packages."
+msg "You will be prompted for your password by sudo."
+
+# clear any previous sudo permission
+sudo -k
+
+sudo sh "${LOCAL_INSTALL_SCRIPT}" "${MAYBE_UNINSTALL}"
 if [ $? -ne 0 ]
 then
 	rm -Rf "${TMP_DIR}"
@@ -475,7 +482,7 @@ if [ -z "${CFG_DISABLE_CARGO}" ]; then
             err "failed to unpack cargo installer"
     fi
 
-    sh "${CARGO_LOCAL_INSTALL_SCRIPT}" "${MAYBE_UNINSTALL}"
+    sudo sh "${CARGO_LOCAL_INSTALL_SCRIPT}" "${MAYBE_UNINSTALL}"
     if [ $? -ne 0 ]
     then
             rm -Rf "${TMP_DIR}"
